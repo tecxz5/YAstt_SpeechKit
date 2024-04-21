@@ -1,3 +1,4 @@
+import math
 import telebot
 from database import create_table, insert_row, count_all_blocks
 from stt import speech_to_text
@@ -5,6 +6,7 @@ from config import TOKEN
 
 create_table()
 bot = telebot.TeleBot(TOKEN)
+MAX_USER_STT_BLOCKS = 12  # выделяем на каждого пользователя по 12 аудиоблоков
 
 # Обрабатываем команду /stt
 @bot.message_handler(commands=['stt'])
@@ -12,10 +14,6 @@ def stt_handler(message):
     user_id = message.from_user.id
     bot.send_message(user_id, 'Отправь голосовое сообщение, чтобы я его распознал!')
     bot.register_next_step_handler(message, stt)
-
-import math
-
-MAX_USER_STT_BLOCKS = 12  # выделяем на каждого пользователя по 12 аудиоблоков
 
 def is_stt_block_limit(message, duration):
     user_id = message.from_user.id
